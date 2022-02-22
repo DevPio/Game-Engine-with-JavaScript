@@ -10,6 +10,7 @@ let y = 25;
 let velocida = 1.5;
 
 export const Game = {
+  gameObjectList: [],
   Input,
   moveX: true,
   ImageManage,
@@ -45,11 +46,18 @@ export const Game = {
     Game.Drawing = new Draw(ctx, width, height);
   },
   start() {
-    if (!this.isRunning) {
-      Game.constructor();
-      Game.isRunning = true;
-      Game.run();
-    }
+    Game.constructor();
+
+    //Game.run();
+  },
+  addObject(obj) {
+    Game.gameObjectList.push(obj);
+    obj.start();
+  },
+  removeObj(element) {
+    let indexObj = Game.gameObjectList.indexOf(element);
+    Game.gameObjectList.splice(indexObj, 1);
+    obj.onDestroy();
   },
   stop() {
     if (Game.isRunning) {
@@ -65,37 +73,36 @@ export const Game = {
     }
   },
   update() {
-    if (Input.onKey(Input.key.RIGHT)) {
-      if (x > Game.canvas.width) {
-        x = 0;
-      } else {
-        x += 5;
-      }
-    }
+    // if (Input.onKey(Input.key.RIGHT)) {
+    //   if (x > Game.canvas.width) {
+    //     x = 0;
+    //   } else {
+    //     x += 5;
+    //   }
+    // }
+    // if (Input.onKey(Input.key.LEFT)) {
+    //   if (x <= 0) {
+    //     x = Game.canvas.width;
+    //   } else {
+    //     x -= 5;
+    //   }
+    // }
+    // if (Input.onKey(Input.key.DOWN)) {
+    //   if (y > Game.canvas.height) {
+    //     y = 0;
+    //   } else {
+    //     y += 5;
+    //   }
+    // }
+    // if (Input.onKey(Input.key.UP)) {
+    //   if (y < 0) {
+    //     y = Game.canvas.height;
+    //   } else {
+    //     y -= 5;
+    //   }
+    // }
 
-    if (Input.onKey(Input.key.LEFT)) {
-      if (x > Game.canvas.width) {
-        x = 0;
-      } else {
-        x -= 5;
-      }
-    }
-
-    if (Input.onKey(Input.key.DOWN)) {
-      if (y > Game.canvas.height) {
-        y = 0;
-      } else {
-        y += 5;
-      }
-    }
-
-    if (Input.onKey(Input.key.UP)) {
-      if (y < 0) {
-        y = Game.canvas.height;
-      } else {
-        y -= 5;
-      }
-    }
+    Game.gameObjectList.forEach((obj) => obj.update());
   },
   async draw() {
     Game.Drawing.clearCanvas();
@@ -108,6 +115,8 @@ export const Game = {
     // Game.Drawing.drawImages(img, 10, 10, 300, 400);
 
     // console.log(img);
-    Game.Drawing.drawRect(x, y, 10, 10);
+    //Game.Drawing.drawRect(x, y, 10, 10);
+
+    Game.gameObjectList.forEach((obj) => obj.draw());
   },
 };
